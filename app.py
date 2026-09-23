@@ -4,7 +4,6 @@ import requests
 # Page Configuration
 st.set_page_config(page_title="TaglineZain AI Studio", page_icon="⚡", layout="centered")
 
-# Custom Styling for Clean Professional Look
 st.markdown("""
     <style>
     .main { background-color: #0e1117; color: #ffffff; }
@@ -23,10 +22,10 @@ st.write("Aapka apna high-level AI platform: Smart Chat, AI Image Generator, aur
 # Tabs for Features
 chat_tab, image_tab, voice_tab = st.tabs(["💬 Smart Chat", "🖼️ AI Image Generator", "🗣️ Voice Studio"])
 
-# 1. SMART CHAT TAB (ChatGPT-Level Intelligent Response Engine)
+# 1. SMART CHAT TAB (Smart Conversational Engine)
 with chat_tab:
     st.subheader("TaglineZain Advanced Intelligent Chat")
-    st.write("Aap yahan koi bhi sawal pooch sakte hain—coding, e-commerce, business strategy ya general knowledge.")
+    st.write("Aap yahan koi bhi sawal pooch sakte hain—coding, e-commerce, business strategy ya aam guftagu.")
 
     if "messages" not in st.session_state:
         st.session_state.messages = [
@@ -44,24 +43,29 @@ with chat_tab:
 
         with st.chat_message("assistant"):
             with st.spinner("TaglineZain soch raha hai..."):
-                try:
-                    # Fetching smart knowledge response cleanly without failing
-                    url = f"https://api.duckduckgo.com/?q={requests.utils.quote(prompt)}&format=json"
-                    response = requests.get(url, timeout=6)
-                    data = response.json()
-                    
-                    answer = data.get("AbstractText", "")
-                    if not answer:
-                        related = data.get("RelatedTopics", [])
-                        if related and isinstance(related, list) and len(related) > 0 and "Text" in related[0]:
-                            answer = related[0]["Text"]
-                    
-                    if answer:
-                        reply = f"🤖 **TaglineZain AI Answer:**\n\n{answer}"
-                    else:
-                        reply = f"TaglineZain kehta hai: Aapka yeh sawal ('{prompt}') bohot zabardast aur gora-fikr hai! Is topic par mazeed tafseel yeh hai ke yeh modern technology aur strategy ka aik ahem hissa hai. Aap is par mazeed kya janna chahte hain?"
-                except Exception as e:
-                    reply = f"TaglineZain AI: Main aapki baat samajh gaya hoon ('{prompt}'). Yeh aik behtareen point hai, isay mazeed behtar banate hain!"
+                p_lower = prompt.lower().strip()
+                
+                # Smart Conversational Handlers for Natural Chat Experience
+                if any(word in p_lower for word in ["kesy ho", "kese ho", "kaise ho", "how are you"]):
+                    reply = "Main bilkul theek hoon! Allah ka shukar hai. Aap sunayein, aap kaise hain aur aaj main aapki kya madad karoon?"
+                elif any(word in p_lower for word in ["salam", "assalam", "hello", "hi", "hey"]):
+                    reply = "Waikum Assalam! Bataiye, aaj konsa naya project ya sawal discuss karna hai?"
+                elif any(word in p_lower for word in ["era name", "tumhara naam", "who are you", "what is your name"]):
+                    reply = "Mera naam **TaglineZain-AI** hai, aur main aapka apna advanced AI assistant hoon jo aapke sabhi tasks ko behtar banane ke liye tayyar kiya gaya hai."
+                else:
+                    try:
+                        # Fallback to web search knowledge for general queries
+                        url = f"https://api.duckduckgo.com/?q={requests.utils.quote(prompt)}&format=json"
+                        response = requests.get(url, timeout=5)
+                        data = response.json()
+                        answer = data.get("AbstractText", "")
+                        
+                        if answer:
+                            reply = f"🤖 **TaglineZain AI Answer:**\n\n{answer}"
+                        else:
+                            reply = f"Aapka yeh sawal bohot acha hai! '{prompt}' ke hawale se yeh kehna hai ke yeh ek ahem topic hai jis par mazeed focus karne se behtareen nataij mil sakte hain. Aap is baray mein aur kya pochna chahte hain?"
+                    except Exception:
+                        reply = f"Main aapki baat samajh gaya hoon ('{prompt}'). Is par mazeed tafseel se baat karte hain, batayein agla step kya kiya jaye?"
             
             st.markdown(reply)
             st.session_state.messages.append({"role": "assistant", "content": reply})
@@ -69,8 +73,6 @@ with chat_tab:
 # 2. IMAGE GENERATOR TAB
 with image_tab:
     st.subheader("AI Image Studio")
-    st.write("Apni pasand ka prompt likhein aur high-definition tasveer hasil karein:")
-    
     img_prompt = st.text_input("Tasveer ka prompt likhein:", "A stunning futuristic cyberpunk city with neon lights")
     if st.button("Generate Image Now"):
         if img_prompt:
@@ -83,9 +85,7 @@ with image_tab:
 # 3. VOICE STUDIO TAB
 with voice_tab:
     st.subheader("Professional Voice Studio")
-    st.write("Yahan jo text aap likhenge, TaglineZain usay saaf aawaz mein convert kar dega:")
-    
-    voice_text = st.text_area("Yahan text likhein:", "Hello! Welcome to TaglineZain AI Studio. Your advanced assistant is ready.")
+    voice_text = st.text_area("Yahan text likhein:", "Hello! Welcome to TaglineZain AI Studio.")
     if st.button("Generate Voice Audio"):
         if voice_text:
             with st.spinner("Aawaz tayyar ho rahi hai..."):
